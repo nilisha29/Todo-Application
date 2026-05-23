@@ -258,3 +258,32 @@ h1 {
   font-size: 12px;
   cursor: pointer;
 }
+
+/* Filter Buttons */
+.filter-btns {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.filter-btn {
+  padding: 8px 20px;
+  border: 2px solid #667eea;
+  background: transparent;
+  color: #667eea;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.filter-btn:hover {
+  background: #667eea;
+  color: white;
+}
+
+.filter-btn.active {
+  background: #667eea;
+  color: white;
+}

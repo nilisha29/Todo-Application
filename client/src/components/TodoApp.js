@@ -5,6 +5,7 @@ function TodoApp() {
   const [title, setTitle] = useState('');
   const [editId, setEditId] = useState(null);
   const [editTitle, setEditTitle] = useState('');
+  const [filter, setFilter] = useState('all');
 
   useEffect(() => {
     fetch('http://localhost:5000/todos')
@@ -53,12 +54,19 @@ function TodoApp() {
     setEditTitle('');
   };
 
+  const filteredTodos = todos.filter(todo => {
+    if (filter === 'active') return !todo.completed;
+    if (filter === 'completed') return todo.completed;
+    return true;
+  });
+
   return (
     <div className="todo-wrapper">
       <div className="todo-container">
         <h1>📝 Todo Application</h1>
         <p className="subtitle">Stay organized and productive</p>
 
+        {/* Add Todo */}
         <div className="add-todo">
           <input
             type="text"
@@ -70,17 +78,38 @@ function TodoApp() {
           <button className="add-btn" onClick={addTodo}>Add Task</button>
         </div>
 
+        {/* Stats */}
         <div className="stats">
           <span>Total: {todos.length}</span>
           <span>Completed: {todos.filter(t => t.completed).length}</span>
           <span>Pending: {todos.filter(t => !t.completed).length}</span>
         </div>
 
+        {/* Filter Buttons */}
+        <div className="filter-btns">
+          <button
+            className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
+            onClick={() => setFilter('all')}>
+            All
+          </button>
+          <button
+            className={`filter-btn ${filter === 'active' ? 'active' : ''}`}
+            onClick={() => setFilter('active')}>
+            Active
+          </button>
+          <button
+            className={`filter-btn ${filter === 'completed' ? 'active' : ''}`}
+            onClick={() => setFilter('completed')}>
+            Completed
+          </button>
+        </div>
+
+        {/* Todo List */}
         <ul className="todo-list">
-          {todos.length === 0 && (
-            <p className="empty-msg">No tasks yet! Add one above.</p>
+          {filteredTodos.length === 0 && (
+            <p className="empty-msg">No tasks found!</p>
           )}
-          {todos.map(todo => (
+          {filteredTodos.map(todo => (
             <li key={todo.id} className={`todo-item ${todo.completed ? 'completed' : ''}`}>
               {editId === todo.id ? (
                 <div className="edit-mode">
