@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const { Pool } = require('pg');
+const pool = require('./config/db');
 
 dotenv.config();
 
@@ -9,13 +9,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
-});
 
 // Test route
 app.get('/', (req, res) => {
@@ -36,13 +29,25 @@ app.get('/todos', async (req, res) => {
 app.post('/todos', async (req, res) => {
   try {
     const { title } = req.body;
+
+    // Validation
+    if (!title || !title.trim()) {
+      return res.status(400).json({
+        error: 'Title is required'
+      });
+    }
+
     const result = await pool.query(
       'INSERT INTO todos (title) VALUES ($1) RETURNING *',
       [title]
     );
+
     res.json(result.rows[0]);
+
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({
+      error: error.message
+    });
   }
 });
 

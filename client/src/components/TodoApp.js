@@ -25,7 +25,9 @@ function TodoApp() {
     setTitle('');
   };
 
-  const deleteTodo = async (id) => {
+const deleteTodo = async (id) => {
+    const confirm = window.confirm('Are you sure you want to delete this task?');
+    if (!confirm) return;
     await fetch(`http://localhost:5000/todos/${id}`, {
       method: 'DELETE'
     });
@@ -63,7 +65,7 @@ function TodoApp() {
   return (
     <div className="todo-wrapper">
       <div className="todo-container">
-        <h1>📝 Todo Application</h1>
+        <h1>Todo Application</h1>
         <p className="subtitle">Stay organized and productive</p>
 
         {/* Add Todo */}
